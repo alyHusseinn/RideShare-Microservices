@@ -1,14 +1,12 @@
-import express, { NextFunction, Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
-import axios, { Method } from 'axios';
 import env from './config/env';
 import { checkJwt } from './middleware/checkJwt';
 import userRouter from './routes/userRouter';
 import { createProxyMiddleware } from 'http-proxy-middleware';
-import { features } from 'process';
 
 dotenv.config();
 

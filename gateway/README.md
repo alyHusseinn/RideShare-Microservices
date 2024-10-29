@@ -2,11 +2,10 @@
 The api gateway for the Mobility application.
 
 # Tasks
-1. The Api GateWay is a Nodejs application.
-2. It works as a reverse proxy for the microservices.
-3. Authenticate the user.
-4. Rate limit the requests.
-5. Route the requests to the appropriate microservices.
+- [x] Create a user management system
+- [x] Create a user authentication system
+- [ ] Rate limit
+- [x] Proxy requests to the microservices
 
 # Technologies Used
 1. Nodejs with Typescript

@@ -10,6 +10,8 @@ const env = {
   DB_PORT: process.env.DB_PORT,
   JWT_SECRET: process.env.JWT_SECRET,
   JWT_EXPIRY: process.env.JWT_EXPIRY,
+  LOCATIONS_SERVICE_URL: process.env.LOCATIONS_SERVICE_URL,
+  TRIPS_SERVICE_URL: process.env.TRIPS_SERVICE_URL,
 };
 
 export default env;

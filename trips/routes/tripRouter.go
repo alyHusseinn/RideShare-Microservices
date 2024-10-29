@@ -5,11 +5,12 @@ import (
 	"github.com/alyHusseinn/mobility-app/trips/helpers"
 	"github.com/alyHusseinn/mobility-app/trips/models"
 	"github.com/gin-gonic/gin"
+	"strconv"
 	"time"
 )
 
 type CreateTripReqest struct {
-	RiderId     uint               `json:"rider_id" binding:"required"`
+	// RiderId     uint               `json:"rider_id" binding:"required"`
 	Origin      models.Coordinates `json:"origin" binding:"required"`
 	Destination models.Coordinates `json:"destination" binding:"required"`
 }
@@ -33,6 +34,14 @@ func TripRouter(router *gin.RouterGroup) {
 			})
 			return
 		}
+
+		riderId, err := strconv.ParseUint(ctx.Request.Header.Get("x-user-id"), 10, 32)
+		if err != nil {
+			ctx.JSON(400, gin.H{
+				"error": "x-user-id header is required",
+			})
+			return
+		}
 		// 1. calcutle the Price of the tirp
 		// 2. calulate the distance
 		// 3. Call match service with trip info to match it with nearby available driver
@@ -40,7 +49,7 @@ func TripRouter(router *gin.RouterGroup) {
 		price := helpers.CalculatePrice(distance)
 
 		trip = models.Trip{
-			RiderId:     tripReq.RiderId,
+			RiderId:     uint(riderId),
 			Origin:      tripReq.Origin,
 			Destination: tripReq.Destination,
 			Distance:    distance,
@@ -61,7 +70,7 @@ func TripRouter(router *gin.RouterGroup) {
 			})
 			return
 		}
-		
+
 		ctx.JSON(200, gin.H{
 			"message": "trip created successfully",
 			"data":    trip,

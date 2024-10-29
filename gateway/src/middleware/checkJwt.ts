@@ -7,7 +7,6 @@ import { eq } from 'drizzle-orm';
 
 export const checkJwt = async (req: Request & { user?: User }, res: Response, next: NextFunction) => {
     const token = req.cookies?.token || req.headers.authorization?.split(' ')[1];
-    console.log(req.cookies)
 
     if (!token) {
         return res.status(401).json({ message: 'No token provided' });

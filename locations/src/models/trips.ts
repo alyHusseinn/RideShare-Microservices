@@ -4,16 +4,16 @@ import mongoose, { Schema, Document } from "mongoose";
 export interface ITrip extends Document {
     _id: mongoose.Types.ObjectId;
     tripId: number;
-    driverId: Schema.Types.ObjectId;
-    riderId: string;
-    pickupLocation: {
+    driverId?: mongoose.Types.ObjectId | null;
+    riderId: number;
+    pickupLocation?: {
         type: string;
         coordinates: number[];
-    };
-    destination: {
+    } | null;
+    destination?: {
         type: string;
         coordinates: number[];
-    };
+    } | null;
     isMatched: boolean;
 }
 
@@ -25,7 +25,7 @@ const tripSchema = new mongoose.Schema({
     },
     driverId: { type: Schema.Types.ObjectId, ref: "Driver" },
     riderId: {
-        type: String,
+        type: Number,
         required: true,
     },
     pickupLocation: {

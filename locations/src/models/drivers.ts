@@ -1,3 +1,4 @@
+import { truncate } from "fs";
 import mongoose, { Document } from "mongoose";
 
 export interface IDriver extends Document {
@@ -5,10 +6,10 @@ export interface IDriver extends Document {
     username: string;
     driverId: number;
     socketId: string;
-    location: {
+    location?: {
         type: string;
-        coordinates: [number, number];
-    };
+        coordinates: number[];
+    } | null;
     available: boolean;
 }
 

@@ -12,3 +12,10 @@ realtime connection with driver and rider:
 3. Redis / mongodb
 4. Socket.io
 5. Typescript
+
+# state
+1. Available drivers
+2. Unavailable drivers
+3. riders
+4. Matched trips
+5. Unmatched trips

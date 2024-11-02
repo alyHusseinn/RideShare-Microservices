@@ -1,4 +1,16 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
+
+export interface IDriver extends Document {
+    _id: mongoose.Types.ObjectId;
+    username: string;
+    driverId: number;
+    socketId: string;
+    location: {
+        type: string;
+        coordinates: [number, number];
+    };
+    available: boolean;
+}
 
 const driverSchema = new mongoose.Schema({
     username: {

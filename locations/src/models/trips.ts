@@ -1,5 +1,22 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 // a7a
+
+export interface ITrip extends Document {
+    _id: mongoose.Types.ObjectId;
+    tripId: number;
+    driverId: Schema.Types.ObjectId;
+    riderId: string;
+    pickupLocation: {
+        type: string;
+        coordinates: number[];
+    };
+    destination: {
+        type: string;
+        coordinates: number[];
+    };
+    isMatched: boolean;
+}
+
 const tripSchema = new mongoose.Schema({
     tripId: {
         type: Number,

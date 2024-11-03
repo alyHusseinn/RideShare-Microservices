@@ -44,9 +44,11 @@ const socketHandler = (io: Server) => {
     io.on("connection", (socket) => {
         console.log("a user connected");
 
-        const userId = socket.handshake.headers["x-user-id"] as string;
-        const username = socket.handshake.headers["x-user-name"] as string;
-        const isDriver = socket.handshake.headers["x-user-role"] === "driver";
+        const userId = socket.handshake.query["x-user-id"] as string;
+        const username = socket.handshake.query["x-user-name"] as string;
+        const isDriver = socket.handshake.query["x-user-role"] === "driver";
+
+        console.log("User ID:", userId, "Username:", username, "Is Driver:", isDriver);
 
         if (isDriver) {
             handleDriverConnection(socket, userId, username);

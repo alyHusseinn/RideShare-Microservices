@@ -17,7 +17,9 @@ const httpServer = createServer(app);
 const io = new Server(httpServer, {
     cors: {
         origin: '*',
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
     },
+    path: '/socket',
 });
 
 app.get('/hello', (req, res) => {

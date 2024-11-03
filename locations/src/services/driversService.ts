@@ -5,12 +5,21 @@ import { type Location } from "../types";
 
 const driversService = {
     createOne: async (driverId: number, username: string, socketId: string) => {
-        return await Driver.create({
-            driverId,
-            username,
-            socketId,
-            available: false,
-        });
+        try {
+            const driver = await Driver.create({
+                driverId,
+                username,
+                socketId,
+                available: false,
+                location: {
+                    type: "Point",
+                    coordinates: [0, 0],
+                }
+            });
+            return driver;
+        } catch (error) {
+            console.log(error);
+        }
     },
     findNearby: async (location: Location) => {
         return await Driver.find({

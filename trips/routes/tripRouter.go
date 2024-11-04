@@ -1,12 +1,14 @@
 package routes
 
 import (
+	"fmt"
+	"strconv"
+	"time"
+
 	"github.com/alyHusseinn/mobility-app/trips/config"
 	"github.com/alyHusseinn/mobility-app/trips/helpers"
 	"github.com/alyHusseinn/mobility-app/trips/models"
 	"github.com/gin-gonic/gin"
-	"strconv"
-	"time"
 )
 
 type CreateTripReqest struct {
@@ -64,6 +66,7 @@ func TripRouter(router *gin.RouterGroup) {
 		}
 		// call match service to match the trip with nearby available driver
 		if err := helpers.MatchTrip(&trip); err != nil {
+			fmt.Println(err)
 			ctx.JSON(500, gin.H{
 				"error":  "failed to match trip",
 				"detail": err.Error(),

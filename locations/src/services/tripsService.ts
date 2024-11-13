@@ -7,14 +7,30 @@ import { SOCKET_EMITTERS } from "../constants";
 import { Server } from "socket.io";
 
 const tripsService = {
-    createOne: async (tripId: number, riderId: number, origin: Location, destination: Location) => {
-        return await Trip.create({
-            origin: [origin.lat, origin.long],
-            destination: [destination.lat, destination.long],
-            tripId,
-            riderId,
-            isMatched: false,
-        });
+    createOne: async (tripId: number, riderId: number, origin: Location, destination: Location): Promise<ITrip> => {
+        try {
+            const newTrip = await Trip.create({
+                pickupLocation: {
+                    type: "Point",
+                    coordinates: [origin.lat, origin.long],
+                },
+                destination: {
+                    type: "Point",
+                    coordinates: [destination.lat, destination.long],
+                },
+                tripId,
+                riderId,
+                isMatched: false,
+            });
+
+            if (!newTrip) {
+                throw new Error("Trip creation failed.");
+            }
+            return newTrip;
+        } catch (error) {
+            console.error("Error creating trip:", error);
+            throw error;
+        }
     },
     findNearby: async (location: Location): Promise<ITrip[]> => {
         return await Trip.find({
@@ -37,7 +53,9 @@ const tripsService = {
             long: trip?.pickupLocation!.coordinates[1],
         });
 
-        if (drivers) {
+        console.log(trip._id)
+
+        if (drivers.length > 0) {
             const driver = drivers[0]
             await tripsService.updateMatching(trip._id, driver._id, true);
             io.to(driver.socketId).emit(SOCKET_EMITTERS.DRIVER_NEW_TRIP_FOR, {

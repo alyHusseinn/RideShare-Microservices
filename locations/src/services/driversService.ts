@@ -39,6 +39,12 @@ const driversService = {
     findBySocketId: async (socketId: string): Promise<IDriver> => {
         return (await Driver.findOne({ socketId }))!;
     },
+    updateCurrentLocation: async (socketId: string, location: Location) => {
+        return await Driver.findOneAndUpdate({ socketId }, { location: {
+            type: "Point",
+            coordinates: [location.lat, location.long],
+        } });
+    },
     updateAvilability: async (socketId: string, available: boolean) => {
         return await Driver.findOneAndUpdate({ socketId }, { available });
     },

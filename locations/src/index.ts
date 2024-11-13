@@ -26,7 +26,7 @@ app.get('/hello', (req, res) => {
     res.send('Hello, World!');
 });
 
-app.use('/api', matchRouter(io));
+app.use('/api/match', matchRouter(io));
 
 httpServer.listen(env.PORT, async () => {
     await connectDB();

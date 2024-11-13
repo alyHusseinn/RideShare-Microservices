@@ -49,6 +49,7 @@ const socketHandler = (io: Server) => {
         const isDriver = socket.handshake.query["x-user-role"] === "driver";
 
         console.log("User ID:", userId, "Username:", username, "Is Driver:", isDriver);
+        io.to(socket.id).emit("connected", { userId, username, isDriver });
 
         if (isDriver) {
             handleDriverConnection(socket, userId, username);
@@ -56,7 +57,16 @@ const socketHandler = (io: Server) => {
             handleRiderConnection(socket, userId, username);
         }
 
+        socket.onAny((event, ...args) => {
+            console.log("Received event:", event, "with args:", args);
+        });
+
+        socket.on('a7a', (data) => {
+            console.log("Received a7a:", data);
+        });
+
         socket.on(SOCKET_EVENTS.DRIVER_LOCATION_UPDATE, async (location: Location) => {
+            console.log("Driver location update received:", location);
             const nearbyTrips = await TripsService.findNearby(location);
 
             if (nearbyTrips.length > 0) {
@@ -65,9 +75,12 @@ const socketHandler = (io: Server) => {
                 if (driver) {
                     await handleTripMatching(socket, trip, driver);
                 }
+            }else {
+                await DriversService.updateCurrentLocation(socket.id, location);
             }
         });
         socket.on(SOCKET_EVENTS.DRIVER_AVAILABLE_UPDATE, async (available: boolean) => {
+            console.log("Driver availability update received:", available);
             await DriversService.updateAvilability(socket.id, available);
         });
 

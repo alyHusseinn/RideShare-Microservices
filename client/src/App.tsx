@@ -7,16 +7,12 @@ import { SignupForm } from "./components/SignupForm";
 import { CreateTrip } from "./components/CreateTrip";
 import { DriverDashboard } from "./components/DriverDashboard";
 import { RiderDashboard } from "./components/RiderDashboard";
-import { useSocket } from "./hooks/useSocket";
 import { useAuth } from "./context/AuthContext";
+import { getSocket } from "./socket";
 
 const AppContent = () => {
   const { user } = useAuth();
-  const socket = useSocket(user);
-
-  // if (user && !socket) {
-  //   return <div>Connecting...</div>;
-  // }
+  const socket = getSocket(user!);
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -28,9 +24,9 @@ const AppContent = () => {
             element={
               <ProtectedRoute>
                 {user?.role === "driver" ? (
-                  <DriverDashboard socket={socket!} />
+                  <DriverDashboard socket={socket} />
                 ) : (
-                  <RiderDashboard socket={socket!} />
+                  <RiderDashboard socket={socket} />
                 )}
               </ProtectedRoute>
             }
@@ -49,7 +45,6 @@ const AppContent = () => {
       </div>
     </div>
   );
-
 };
 function App() {
   return (

@@ -8,13 +8,13 @@ export const useSocket = (user: User | null) => {
   useEffect(() => {
     if (!user) return; // Ensure user is defined before initializing socket
 
-    socketRef.current = io('http://localhost:3000', {
+    socketRef.current = io('http://localhost:4000', {
       query: {
         'x-user-id': `${user.id}`,
         'x-user-name': user.username,
         'x-user-role': user.role,
       },
-      transports: ['websocket'], // Ensure WebSocket transport is included
+      // transports: ['websocket'], // Ensure WebSocket transport is included
       path: '/socket', // Ensure path matches target server path
       
     });

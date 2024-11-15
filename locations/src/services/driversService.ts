@@ -27,7 +27,7 @@ const driversService = {
                 $near: {
                     $geometry: {
                         type: "Point",
-                        coordinates: [location.lat, location.long],
+                        coordinates: [location.long, location.lat],
                     },
                     $maxDistance: 10000,
                     $minDistance: 0,
@@ -42,7 +42,7 @@ const driversService = {
     updateCurrentLocation: async (socketId: string, location: Location) => {
         return await Driver.findOneAndUpdate({ socketId }, { location: {
             type: "Point",
-            coordinates: [location.lat, location.long],
+            coordinates: [location.long, location.lat],
         } });
     },
     updateAvilability: async (socketId: string, available: boolean) => {

@@ -12,11 +12,11 @@ const tripsService = {
             const newTrip = await Trip.create({
                 pickupLocation: {
                     type: "Point",
-                    coordinates: [origin.lat, origin.long],
+                    coordinates: [origin.long, origin.lat],
                 },
                 destination: {
                     type: "Point",
-                    coordinates: [destination.lat, destination.long],
+                    coordinates: [destination.long, destination.lat],
                 },
                 tripId,
                 riderId,
@@ -33,24 +33,30 @@ const tripsService = {
         }
     },
     findNearby: async (location: Location): Promise<ITrip[]> => {
-        return await Trip.find({
-            origin: {
+        try{
+           return await Trip.find({
+            pickupLocation: {
                 $near: {
                     $geometry: {
                         type: "Point",
-                        coordinates: [location.lat, location.long],
+                        coordinates: [location.long, location.lat],
                     },
                     $maxDistance: 10000,
                     $minDistance: 0,
                 },
             },
             isMatched: false,
-        });
+        }); 
+        }catch(error){
+            console.error("Error finding nearby trips:", error);
+            throw error;
+        }
+        
     },
     matchTrip: async (io: Server, trip: ITrip) => {
         const drivers = await DriversService.findNearby({
-            lat: trip?.pickupLocation!.coordinates[0],
-            long: trip?.pickupLocation!.coordinates[1],
+            long: trip?.pickupLocation!.coordinates[0],
+            lat: trip?.pickupLocation!.coordinates[1],
         });
 
         console.log(trip._id)

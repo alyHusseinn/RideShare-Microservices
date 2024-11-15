@@ -35,7 +35,7 @@ const tripSchema = new mongoose.Schema({
             required: true,
         },
         coordinates: {
-            type: [Number],
+            type: [Number], // stored in [longitude, latitude] order, bc MongoDB uses that
             required: true,
         },
     },
@@ -46,7 +46,7 @@ const tripSchema = new mongoose.Schema({
             required: true,
         },
         coordinates: {
-            type: [Number],
+            type: [Number], // stored in [longitude, latitude] order, bc MongoDB uses that
             required: true,
         },
     },
@@ -56,4 +56,6 @@ const tripSchema = new mongoose.Schema({
     }
 });
 
+tripSchema.index({ pickupLocation: "2dsphere" });
+tripSchema.index({ destination: "2dsphere" });
 export default mongoose.model("Trip", tripSchema);

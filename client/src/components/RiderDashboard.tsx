@@ -1,17 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { Socket } from 'socket.io-client';
-import { SOCKET_EVENTS, SOCKET_EMITTERS } from '../constants';
-import { Trip } from '../types';
-// import { useSocket } from '../hooks/useSocket';
-// import { useAuth } from '../context/AuthContext';
+import React, { useEffect, useState } from "react";
+import { SOCKET_EVENTS, SOCKET_EMITTERS } from "../constants";
+import { Trip } from "../types";
+import { Socket } from "socket.io-client";
 interface Props {
   socket: Socket;
 }
 
-export const RiderDashboard: React.FC<Props> = ({socket}: Props) => {
+export const RiderDashboard: React.FC<Props> = ({ socket }: Props) => {
   const [currentTrip, setCurrentTrip] = useState<Trip | null>(null);
-  // const { user } = useAuth();
-  // const socket: Socket = useSocket(user!) as Socket;
 
   useEffect(() => {
     if (!socket) return;
@@ -19,14 +15,10 @@ export const RiderDashboard: React.FC<Props> = ({socket}: Props) => {
       setCurrentTrip(trip);
     });
 
-    socket.emit('a7a', 'a7a');
-
-    socket.on("connected", (data) => {
-      console.log("Connected to server:", data);
-    });
-
     socket.on(SOCKET_EMITTERS.RIDER_YOUR_TRIP_ONGOING, ({ tripId, status }) => {
-      setCurrentTrip(prev => prev && prev.tripId === tripId ? { ...prev, status } : prev);
+      setCurrentTrip((prev) =>
+        prev && prev.tripId === tripId ? { ...prev, status } : prev
+      );
     });
 
     socket.on(SOCKET_EMITTERS.RIDER_YOUR_TRIP_COMPLETED, ({ tripId }) => {
@@ -42,13 +34,21 @@ export const RiderDashboard: React.FC<Props> = ({socket}: Props) => {
 
   const confirmTripOngoing = () => {
     if (currentTrip) {
-      socket.emit(SOCKET_EVENTS.RIDER_CONFIRM_TRIP_ONGOING, currentTrip.tripId, 'ongoing');
+      socket?.emit(
+        SOCKET_EVENTS.RIDER_CONFIRM_TRIP_ONGOING,
+        currentTrip.tripId,
+        "ongoing"
+      );
     }
   };
 
   const confirmTripCompleted = () => {
     if (currentTrip) {
-      socket.emit(SOCKET_EVENTS.RIDER_CONFIRM_TRIP_COMPLETED, currentTrip.tripId, 'completed');
+      socket?.emit(
+        SOCKET_EVENTS.RIDER_CONFIRM_TRIP_COMPLETED,
+        currentTrip.tripId,
+        "completed"
+      );
     }
   };
 
@@ -62,9 +62,9 @@ export const RiderDashboard: React.FC<Props> = ({socket}: Props) => {
           <p>Trip ID: {currentTrip.tripId}</p>
           <p>Driver ID: {currentTrip.driverId}</p>
           <p>Status: {currentTrip.status}</p>
-          
+
           <div className="mt-2 space-x-2">
-            {currentTrip.status === 'matched' && (
+            {currentTrip.status === "matched" && (
               <button
                 onClick={confirmTripOngoing}
                 className="px-4 py-2 rounded bg-yellow-500 text-white"
@@ -72,7 +72,7 @@ export const RiderDashboard: React.FC<Props> = ({socket}: Props) => {
                 Confirm Trip Start
               </button>
             )}
-            {currentTrip.status === 'ongoing' && (
+            {currentTrip.status === "ongoing" && (
               <button
                 onClick={confirmTripCompleted}
                 className="px-4 py-2 rounded bg-green-500 text-white"

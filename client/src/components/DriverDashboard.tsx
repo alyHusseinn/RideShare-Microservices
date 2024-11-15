@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import { SOCKET_EVENTS, SOCKET_EMITTERS } from "../constants";
 import { Trip, Location } from "../types";
-
 interface Props {
   socket: Socket;
 }
 
-export const DriverDashboard: React.FC<Props> = ({ socket }: Props) => {
+export const DriverDashboard: React.FC<Props> = ({socket}: Props) => {
   const [available, setAvailable] = useState(false);
   const [currentTrip, setCurrentTrip] = useState<Trip | null>(null);
 
@@ -19,7 +18,7 @@ export const DriverDashboard: React.FC<Props> = ({ socket }: Props) => {
 
     const updateLocation = () => {
       // use navigator.geolocation to get the current location
-      if(!navigator.geolocation) {
+      if (!navigator.geolocation) {
         console.log("Geolocation is not supported by this browser.");
         return;
       }
@@ -29,6 +28,11 @@ export const DriverDashboard: React.FC<Props> = ({ socket }: Props) => {
           long: position.coords.longitude,
         };
         console.log("Current location:", currentLocation);
+        if (socket.connected) {
+          console.log("Socket connected");
+        } else {
+          console.log("Socket not connected");
+        }
         socket.emit(SOCKET_EVENTS.DRIVER_LOCATION_UPDATE, currentLocation);
       });
     };
@@ -48,12 +52,12 @@ export const DriverDashboard: React.FC<Props> = ({ socket }: Props) => {
   const toggleAvailability = () => {
     const newAvailable = !available;
     setAvailable(newAvailable);
-    socket.emit(SOCKET_EVENTS.DRIVER_AVAILABLE_UPDATE, newAvailable);
+    socket?.emit(SOCKET_EVENTS.DRIVER_AVAILABLE_UPDATE, newAvailable);
   };
 
   const setTripOngoing = () => {
     if (currentTrip) {
-      socket.emit(
+      socket?.emit(
         SOCKET_EVENTS.DRIVER_SET_TRIP_ONGOING,
         currentTrip.tripId,
         "ongoing"
@@ -63,7 +67,7 @@ export const DriverDashboard: React.FC<Props> = ({ socket }: Props) => {
 
   const setTripCompleted = () => {
     if (currentTrip) {
-      socket.emit(
+      socket?.emit(
         SOCKET_EVENTS.DRIVER_SET_TRIP_COMPLETED,
         currentTrip.tripId,
         "completed"

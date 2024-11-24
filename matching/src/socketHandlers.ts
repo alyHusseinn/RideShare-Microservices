@@ -111,8 +111,9 @@ const socketHandler = (io: Server) => {
         });
         socket.on(SOCKET_EVENTS.RIDER_CONFIRM_TRIP_ONGOING, async (tripId: number, status: string) => {
             const trip = await TripsService.findById(tripId);
+            const driver = await DriversService.findById(trip?.driverId!);
             if (trip) {
-                await ApiTripsService.updateStatus(trip.tripId, "ongoing");
+                await ApiTripsService.updateStatus(trip.tripId, driver!.driverId, "ongoing");
                 io.to(`trip-${trip.tripId}`).emit(SOCKET_EMITTERS.TRIP_ONGOING, {
                     tripId: trip.tripId
                 });
@@ -121,9 +122,10 @@ const socketHandler = (io: Server) => {
 
         socket.on(SOCKET_EVENTS.RIDER_CONFIRM_TRIP_COMPLETED, async (tripId: number, status: string) => {
             const trip = await TripsService.findById(tripId);
+            const driver = await DriversService.findById(trip?.driverId!);
             if (trip) {
                 try {
-                    await ApiTripsService.updateStatus(trip.tripId, "completed");
+                    await ApiTripsService.updateStatus(trip.tripId, driver!.driverId, "completed");
                     await TripsService.deleteOne(trip._id);
                     io.to(`trip-${trip.tripId}`).emit(SOCKET_EMITTERS.TRIP_COMPLETED, {
                         tripId: trip.tripId,

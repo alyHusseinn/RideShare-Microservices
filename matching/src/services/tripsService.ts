@@ -33,25 +33,26 @@ const tripsService = {
         }
     },
     findNearby: async (location: Location): Promise<ITrip[]> => {
-        try{
-           return await Trip.find({
-            pickupLocation: {
-                $near: {
-                    $geometry: {
-                        type: "Point",
-                        coordinates: [location.long, location.lat],
-                    },
-                    $maxDistance: 10000,
-                    $minDistance: 0,
-                },
-            },
-            isMatched: false,
-        }); 
-        }catch(error){
+        try {
+            //    return await Trip.find({
+            //     pickupLocation: {
+            //         $near: {
+            //             $geometry: {
+            //                 type: "Point",
+            //                 coordinates: [location.long, location.lat],
+            //             },
+            //             $maxDistance: 10000,
+            //             $minDistance: 0,
+            //         },
+            //     },
+            //     isMatched: false,
+            // });
+            return await Trip.find({ isMatched: false });
+        } catch (error) {
             console.error("Error finding nearby trips:", error);
             throw error;
         }
-        
+
     },
     matchTrip: async (io: Server, trip: ITrip) => {
         const drivers = await DriversService.findNearby({

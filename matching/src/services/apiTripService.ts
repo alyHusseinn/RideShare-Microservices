@@ -2,14 +2,14 @@ import env from "../config/env";
 
 const ApiTripsService = {
     updateMatching: async (tripId: number, driverId: number) => {
-        const res = await fetch(env.TRIPS_SERVICE_URL!, {
+        const res = await fetch(env.TRIPS_SERVICE_URL! + "/" + tripId, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                tripId,
-                driverId,
+                driver_id: driverId,
+                status: "pending",
             }),
         })
 
@@ -19,14 +19,14 @@ const ApiTripsService = {
             return false;
         }
     },
-    updateStatus: async (tripId: number, status: "ongoing" | "completed") => {
-        const res = await fetch(env.TRIPS_SERVICE_URL!, {
+    updateStatus: async (tripId: number, driverId: number, status: "ongoing" | "completed") => {
+        const res = await fetch(env.TRIPS_SERVICE_URL! + "/" + tripId, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                tripId,
+                driver_id: driverId,
                 status,
             }),
         })

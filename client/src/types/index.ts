@@ -9,7 +9,7 @@ export interface Trip {
   driverId?: number;
   pickupLocation: Location;
   destination: Location;
-  status: 'pending' | 'matched' | 'ongoing' | 'completed';
+  status: 'pending' | 'ongoing' | 'completed';
 }
 
 export interface User {

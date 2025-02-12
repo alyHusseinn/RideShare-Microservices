@@ -21,9 +21,14 @@ export const RiderDashboard: React.FC<Props> = ({ socket }: Props) => {
       );
     });
 
-    socket.on(SOCKET_EMITTERS.RIDER_YOUR_TRIP_COMPLETED, ({ tripId }) => {
-      setCurrentTrip(tripId);
-    });
+    socket.on(
+      SOCKET_EMITTERS.RIDER_YOUR_TRIP_COMPLETED,
+      ({ tripId, status }) => {
+        setCurrentTrip((prev) =>
+          prev && prev.tripId === tripId ? { ...prev, status } : prev
+        );
+      }
+    );
 
     return () => {
       socket.off(SOCKET_EMITTERS.RIDER_YOUR_TRIP_MATCHED);
@@ -57,27 +62,27 @@ export const RiderDashboard: React.FC<Props> = ({ socket }: Props) => {
       <h1 className="text-2xl font-bold mb-4">Rider Dashboard</h1>
 
       {currentTrip ? (
-        <div className="mt-4 p-4 border rounded">
+        <div className="mt-4 p-4 border-4 rounded border-gray-300 border-dashed">
           <h2 className="text-xl font-semibold">Current Trip</h2>
           <p>Trip ID: {currentTrip.tripId}</p>
           <p>Driver ID: {currentTrip.driverId}</p>
-          <p>Status: {currentTrip.status}</p>
+          <p>Status: {currentTrip?.status || "pending"}</p>
 
           <div className="mt-2 space-x-2">
-            {currentTrip.status === "matched" && (
+            {currentTrip.status === "ongoing" && (
               <button
                 onClick={confirmTripOngoing}
                 className="px-4 py-2 rounded bg-yellow-500 text-white"
               >
-                Confirm Trip Start
+                Please Confirm that Trip is Ongoing
               </button>
             )}
-            {currentTrip.status === "ongoing" && (
+            {currentTrip.status === "completed" && (
               <button
                 onClick={confirmTripCompleted}
                 className="px-4 py-2 rounded bg-green-500 text-white"
               >
-                Confirm Trip Completion
+                Please Confirm that Trip is Completed
               </button>
             )}
           </div>

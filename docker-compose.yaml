@@ -1,0 +1,90 @@
+services:
+  gateway:
+    container_name: gateway
+    build: ./gateway
+    env_file: ./gateway/.env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - trips
+      - matching
+    networks:
+      - mobility-network
+
+  trips:
+    container_name: trips
+    build: ./trips
+    env_file: ./trips/.env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres-trips
+    networks:
+      - mobility-network
+
+  matching:
+    container_name: matching
+    build: ./matching
+    env_file: ./matching/.env
+    ports:
+      - "4000:4000"
+    networks:
+      - mobility-network
+
+  client:
+    container_name: client
+    build: ./client
+    env_file: ./client/.env
+    ports:
+      - "80:80"
+    networks:
+      - mobility-network
+
+  mongodb:
+    container_name: mongodb
+    image: mongo:latest
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    networks:
+      - mobility-network
+    volumes:
+      - mongodb-data:/data/db
+
+  postgres-trips:
+    container_name: postgres-trips
+    image: postgres:latest
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: uber_trips
+    networks:
+      - mobility-network
+    volumes:
+      - postgres-trips-data:/var/lib/postgresql/data
+
+  postgres-users:
+    container_name: postgres-users
+    image: postgres:latest
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: uber_users
+    networks:
+      - mobility-network
+    volumes:
+      - postgres-users-data:/var/lib/postgresql/data
+
+networks:
+  mobility-network:
+
+volumes:
+  mongodb-data:
+  postgres-trips-data:
+  postgres-users-data:

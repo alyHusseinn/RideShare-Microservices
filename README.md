@@ -81,7 +81,7 @@ This project implements a real-time ride-sharing platform using a microservices 
 1.  **Clone the Repository:**
 
     ```bash
-    git clone [https://github.com/alyHusseinn/RideShare-Microservices.git](https://github.com/alyHusseinn/RideShare-Microservices.git)
+    git clone https://github.com/alyHusseinn/RideShare-Microservices.git
     cd mobility-app
     ```
 
